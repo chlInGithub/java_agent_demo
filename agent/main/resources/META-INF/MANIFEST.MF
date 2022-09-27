@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: com.chl.demo.agent.AfterAgent
+Premain-Class: com.chl.demo.agent.PreAgent
+Agent-Class: com.chl.demo.agent.AfterAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+Can-Set-Native-Method-Prefix: false
+
