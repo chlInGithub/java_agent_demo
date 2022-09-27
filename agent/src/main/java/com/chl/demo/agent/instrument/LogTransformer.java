@@ -1,17 +1,15 @@
 package com.chl.demo.agent.instrument;
 
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 import com.chl.deml.agent.annotation.AgentClassAnnotation;
 import com.chl.deml.agent.annotation.AgentMethodAnnotation;
-import javassist.CannotCompileException;
+import com.chl.demo.agent.instrument.utils.AgentUtils;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.NotFoundException;
 
 public class LogTransformer implements ClassFileTransformer {
 
@@ -22,7 +20,7 @@ public class LogTransformer implements ClassFileTransformer {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass;
         try {
-            ctClass = classPool.get(className.replaceAll("/", "."));
+            ctClass = classPool.get(AgentUtils.classNameIntervalDot(className));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("ex at ctClass");

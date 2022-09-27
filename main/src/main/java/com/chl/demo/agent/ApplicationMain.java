@@ -10,7 +10,6 @@ public class ApplicationMain {
         while (true) {
             Thread.sleep(10000);
             agentTarget.targetMethod("from main param");
-            new AgentTarget().targetMethod("new instants");
         }
     }
 }

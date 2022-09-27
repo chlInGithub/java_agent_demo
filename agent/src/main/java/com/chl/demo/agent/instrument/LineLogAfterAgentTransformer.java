@@ -1,24 +1,21 @@
 package com.chl.demo.agent.instrument;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
-import com.chl.deml.agent.annotation.AgentClassAnnotation;
-import com.chl.deml.agent.annotation.AgentMethodAnnotation;
 import com.chl.demo.agent.instrument.cache.AgentContextCache;
 import com.chl.demo.agent.instrument.ex.AgentException;
 import com.chl.demo.agent.instrument.param.AgentParam;
+import com.chl.demo.agent.instrument.utils.AgentUtils;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
-public class LineLogTransformer extends BaseTransformer {
+public class LineLogAfterAgentTransformer extends BaseAfterAgentTransformer {
 
     LineLogParam param;
     AgentParam agentParam;
 
-    public LineLogTransformer(AgentParam param) {
+    public LineLogAfterAgentTransformer(AgentParam param) {
         setParam(param);
     }
 
@@ -45,19 +42,18 @@ public class LineLogTransformer extends BaseTransformer {
     }
 
     @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-            ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+    public byte[] doTransform(ClassLoader loader, String className, Class<?> classBeingRedefined,
+            ProtectionDomain protectionDomain, byte[] classfileBuffer) {
 
         System.out.println(className);
         System.out.println("classBeingRedefined is not null ? " + (null != classBeingRedefined));
         System.out.println("classfileBuffer is not null ? " + (null != classfileBuffer));
 
+
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass;
-        String classNameTemp = className.replaceAll("/", ".");
-        if (AgentContextCache.needRecover(classNameTemp)) {
-            return classfileBuffer;
-        }
+        String classNameTemp = AgentUtils.classNameIntervalDot(className);
+        AgentContextCache.addCache(classNameTemp, classfileBuffer);
 
         try {
             ctClass = classPool.get(classNameTemp);
@@ -71,22 +67,23 @@ public class LineLogTransformer extends BaseTransformer {
         ctClass.defrost();
         ctClass.rebuildClassFile();
 
-        for (CtMethod method : ctClass.getMethods()) {
-            if (method.getName().equals(agentParam.getMethodName())) {
-                try {
-                    method.insertAt(param.getLineNum(), param.getLogContent());
-                    System.out.println("insertAt " + param.getLineNum());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("ex at insertBefore");
-                    return classfileBuffer;
+        if (param.getLineNum() != null) {
+            for (CtMethod method : ctClass.getMethods()) {
+                if (method.getName().equals(agentParam.getMethodName())) {
+                    try {
+                        method.insertAt(param.getLineNum(), param.getLogContent());
+                        System.out.println("insertAt " + param.getLineNum());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("ex at insertBefore");
+                        return classfileBuffer;
+                    }
                 }
             }
         }
 
-        try {
-            AgentContextCache.addCache(classNameTemp, classfileBuffer);
 
+        try {
             return ctClass.toBytecode();
         } catch (Exception e) {
             e.printStackTrace();
