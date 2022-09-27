@@ -55,7 +55,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
-                        <manifestFile>main/resources/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
                 <executions>

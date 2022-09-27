@@ -67,17 +67,12 @@ public class LineLogTransformer extends BaseTransformer {
             return classfileBuffer;
         }
 
-        if (!ctClass.hasAnnotation(AgentClassAnnotation.class)) {
-            System.out.println("not AgentClassAnnotation");
-            return classfileBuffer;
-        }
-
         ctClass.stopPruning(true);
         ctClass.defrost();
         ctClass.rebuildClassFile();
 
         for (CtMethod method : ctClass.getMethods()) {
-            if (method.hasAnnotation(AgentMethodAnnotation.class)) {
+            if (method.getName().equals(agentParam.getMethodName())) {
                 try {
                     method.insertAt(param.getLineNum(), param.getLogContent());
                     System.out.println("insertAt " + param.getLineNum());

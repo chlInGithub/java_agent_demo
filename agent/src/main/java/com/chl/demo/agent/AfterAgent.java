@@ -27,11 +27,11 @@ public class AfterAgent {
     static Map<Class, ClassFileTransformer> transformerMap = new HashMap<>();
 
     public static void main(String[] args) {
-        String jvmId = "28584";
+        String jvmId = "142764";
         try {
             VirtualMachine virtualMachine = VirtualMachine.attach(jvmId);
             virtualMachine.loadAgent("D:\\workspace\\agentDemo\\agent\\target\\agent-1.0-SNAPSHOT-jar-with-dependencies.jar",
-                    "2#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(\"=== this is from agentMain param0 ===\");");
+                    "1#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(\"=== this is from agentMain param0 ===\");");
             virtualMachine.detach();
         } catch (Exception e) {
             e.printStackTrace();
