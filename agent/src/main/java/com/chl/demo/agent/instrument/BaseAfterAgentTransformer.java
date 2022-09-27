@@ -16,7 +16,9 @@ public abstract class BaseAfterAgentTransformer implements ClassFileTransformer 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         String classNameTemp = AgentUtils.classNameIntervalDot(className);
-        AgentContextCache.addCache(classNameTemp, classfileBuffer);
+
+        //
+        AgentContextCache.addOriginalBytesCache(classNameTemp, classfileBuffer);
 
         return doTransform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
     }

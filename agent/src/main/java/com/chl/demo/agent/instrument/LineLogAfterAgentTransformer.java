@@ -53,7 +53,7 @@ public class LineLogAfterAgentTransformer extends BaseAfterAgentTransformer {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass;
         String classNameTemp = AgentUtils.classNameIntervalDot(className);
-        AgentContextCache.addCache(classNameTemp, classfileBuffer);
+        AgentContextCache.addOriginalBytesCache(classNameTemp, classfileBuffer);
 
         try {
             ctClass = classPool.get(classNameTemp);
@@ -63,9 +63,9 @@ public class LineLogAfterAgentTransformer extends BaseAfterAgentTransformer {
             return classfileBuffer;
         }
 
-        ctClass.stopPruning(true);
+        //ctClass.stopPruning(true);
         ctClass.defrost();
-        ctClass.rebuildClassFile();
+        //ctClass.rebuildClassFile();
 
         if (param.getLineNum() != null) {
             for (CtMethod method : ctClass.getMethods()) {

@@ -3,6 +3,7 @@ package com.chl.demo.agent;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.chl.demo.agent.instrument.LineLogAfterAgentTransformer;
@@ -19,11 +20,11 @@ import com.sun.tools.attach.VirtualMachine;
 public class AfterAgent {
 
     public static void main(String[] args) {
-        String jvmId = "54648";
+        String jvmId = "113096";
         try {
             VirtualMachine virtualMachine = VirtualMachine.attach(jvmId);
             virtualMachine.loadAgent("D:\\workspace\\agentDemo\\agent\\target\\agent-1.0-SNAPSHOT-jar-with-dependencies.jar",
-                    "2#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(\"=== this is from agentMain param1 ===\");");
+                    "1#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(\"=== this is from agentMain param1 ===\");");
             virtualMachine.detach();
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,11 +37,16 @@ public class AfterAgent {
         AgentParam param = parseParam(agentArgs);
         String className = param.getClassName();
 
+        // match class
         List<Class> classes = new ArrayList<>();
         for (Class loadedClass : inst.getAllLoadedClasses()) {
             if (loadedClass.getName().equals(className)) {
                 classes.add(loadedClass);
             }
+        }
+
+        if (classes.size() == 0) {
+            return;
         }
 
         ClassFileTransformer transformer = null;
@@ -65,6 +71,7 @@ public class AfterAgent {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
+            // remove the transformer. if not, next agentMain will redo the transformer.
             if (null != transformer) {
                 boolean b = inst.removeTransformer(transformer);
                 if (b) {

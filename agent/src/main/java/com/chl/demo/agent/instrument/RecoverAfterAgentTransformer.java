@@ -7,7 +7,6 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 import com.chl.demo.agent.instrument.cache.AgentContextCache;
-import com.chl.demo.agent.instrument.param.AgentParam;
 import javassist.ClassPool;
 import javassist.CtClass;
 
@@ -24,7 +23,7 @@ public class RecoverAfterAgentTransformer implements ClassFileTransformer {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass;
         String classNameTemp = className.replaceAll("/", ".");
-        byte[] bytes = AgentContextCache.getValue(classNameTemp);
+        byte[] bytes = AgentContextCache.getOriginalBytes(classNameTemp);
 
         // other after transformer happens before recover. if no this check, will cover preAgent result
         if (null == bytes) {

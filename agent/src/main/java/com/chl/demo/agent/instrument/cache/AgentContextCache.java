@@ -34,7 +34,7 @@ public class AgentContextCache {
         recoverClass.remove(AgentUtils.classNameIntervalDot(className));
     }
 
-    public static void addCache(String className, byte[] bytes) {
+    public static void addOriginalBytesCache(String className, byte[] bytes) {
         className = AgentUtils.classNameIntervalDot(className);
         if (!classByteCacheMap.containsKey(className)) {
             CacheValue cacheValue = new CacheValue();
@@ -44,7 +44,7 @@ public class AgentContextCache {
         }
     }
 
-    public static byte[] getValue(String className) {
+    public static byte[] getOriginalBytes(String className) {
         className = AgentUtils.classNameIntervalDot(className);
         CacheValue cacheValue = classByteCacheMap.get(className);
         if (null != cacheValue) {
