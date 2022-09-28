@@ -19,17 +19,19 @@ import com.sun.tools.attach.VirtualMachine;
  */
 public class AfterAgent {
 
-    public static void main(String[] args) {
-        String jvmId = "113096";
+    /*public static void main(String[] args) {
+        String jvmId = "70768";
         try {
             VirtualMachine virtualMachine = VirtualMachine.attach(jvmId);
             virtualMachine.loadAgent("D:\\workspace\\agentDemo\\agent\\target\\agent-1.0-SNAPSHOT-jar-with-dependencies.jar",
-                    "1#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(\"=== this is from agentMain param1 ===\");");
+                    //"1#com.chl.demo.agent.target.AgentTarget#targetMethod#1@System.out.println(param);");
+                    //"1#com.chl.demo.agent.target.AgentTarget#targetMethod#50@System.out.println(param);");
+                    "1#com.chl.demo.agent.target.AgentTarget#targetMethod#20@list.add(Integer.valueOf(5));");
             virtualMachine.detach();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static void agentmain(String agentArgs, Instrumentation inst){
 

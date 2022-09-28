@@ -17,6 +17,10 @@ public class LogTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 
+        if (null == className) {
+            return classfileBuffer;
+        }
+
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass;
         try {
